@@ -15,11 +15,8 @@
 # 1. Установка
 pip install -r requirements.txt
 
-# 2. Настройка .env файла
-echo "GDRIVE_FILE_ID=1O3GpKitaVD4jjsqNiwahw8qU2ARUxDMJ" > .env
-
-# 3. Запуск ETL
+# 2. Запуск ETL
 python etl/main.py
 
-# 4. Анализ
+# 3. Анализ
 jupyter notebook notebooks/EDA.ipynb
