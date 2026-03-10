@@ -30,31 +30,31 @@
 ```
 tech-defect-prediction/
 │
-├── data/ # Директория данных
-│ ├── raw/ # Сырые данные после извлечения
+├── data/                    # Директория данных
+│ ├── raw/                   # Сырые данные после извлечения
 │ │ └── raw_defect_data.csv
-│ ├── processed/ # Очищенные данные
+│ ├── processed/             # Очищенные данные
 │ │ └── clean_defect_data.csv
-│ └── final/ # Финальные данные для анализа
+│ └── final/                 # Финальные данные для анализа
 │ └── final_defect_data.csv
 │
-├── etl/ # ETL модули
+├── etl/                     # ETL модули
 │ ├── init.py
-│ ├── extract.py # Загрузка данных с Google Drive
-│ ├── transform.py # Очистка и трансформация метрик
-│ ├── load.py # Сохранение финальных данных
-│ └── main.py # Главный конвейер ETL
+│ ├── extract.py             # Загрузка данных с Google Drive
+│ ├── transform.py           # Очистка и трансформация метрик
+│ ├── load.py                # Сохранение финальных данных
+│ └── main.py                # Главный конвейер ETL
 │
-├── notebooks/ # Jupyter Notebooks
-│ └── EDA.ipynb # Исследовательский анализ данных
+├── notebooks/               # Jupyter Notebooks
+│ └── EDA.ipynb              # Исследовательский анализ данных
 │
-├── images/ # Визуализации из EDA
+├── images/                  # Визуализации из EDA
 │
-├── .env # Конфигурация (ID файла, пути)
-├── .gitignore # Игнорируемые файлы
-├── requirements.txt # Зависимости Python
-├── pyproject.toml # Конфигурация проекта
-└── README.md # Документация проекта
+├── .env                     # Конфигурация (ID файла, пути)
+├── .gitignore               # Игнорируемые файлы
+├── requirements.txt         # Зависимости Python
+├── pyproject.toml           # Конфигурация проекта
+└── README.md                # Документация проекта
 ```
 
 ---
