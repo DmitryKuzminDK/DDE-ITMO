@@ -28,27 +28,33 @@
 ## Структура проекта
 
 ```
-data-engeneeing-project/
-├── data/
-│   ├── Coffee-modified.csv          # Исходные данные о кофе
-│   ├── raw/
-│   │   └── raw_coffee_data.csv      # Сырые данные после извлечения
-│   ├── processed/
-│   │   ├── clean_coffee_data.csv     # Очищенные данные в CSV
-│   │   └── clean_coffee_data.parquet # Очищенные данные в Parquet
-│   └── final/
-│       └── final_coffee_data.csv    # Финальные данные после ETL
-├── etl/
-│   ├── __init__.py
-│   ├── extract.py                    # Загрузка исходных данных
-│   ├── transform.py                  # Очистка и трансформация данных
-│   ├── load.py                       # Сохранение финальных данных
-│   └── main.py                       # Главный конвейер ETL
-├── notebooks/
-│   └── EDA.ipynb                     # Исследовательский анализ данных
-├── pyproject.toml                    # Конфигурация проекта
-├── requirements.txt                  # Зависимости Python
-└── README.md                         # Этот файл
+tech-defect-prediction/
+│
+├── data/ # Директория данных
+│ ├── raw/ # Сырые данные после извлечения
+│ │ └── raw_defect_data.csv
+│ ├── processed/ # Очищенные данные
+│ │ └── clean_defect_data.csv
+│ └── final/ # Финальные данные для анализа
+│ └── final_defect_data.csv
+│
+├── etl/ # ETL модули
+│ ├── init.py
+│ ├── extract.py # Загрузка данных с Google Drive
+│ ├── transform.py # Очистка и трансформация метрик
+│ ├── load.py # Сохранение финальных данных
+│ └── main.py # Главный конвейер ETL
+│
+├── notebooks/ # Jupyter Notebooks
+│ └── EDA.ipynb # Исследовательский анализ данных
+│
+├── images/ # Визуализации из EDA
+│
+├── .env # Конфигурация (ID файла, пути)
+├── .gitignore # Игнорируемые файлы
+├── requirements.txt # Зависимости Python
+├── pyproject.toml # Конфигурация проекта
+└── README.md # Документация проекта
 ```
 
 ---
