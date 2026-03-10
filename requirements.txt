@@ -1,8 +1,27 @@
-pandas
-numpy
-matplotlib
-seaborn
-scikit-learn
-pyarrow
-python-dotenv
-kaggle  # Новая зависимость для загрузки с Kaggle
+# tech-defect-prediction/requirements.txt
+
+# Основные библиотеки для данных
+pandas==2.2.0
+numpy==1.26.3
+
+# Визуализация
+matplotlib==3.8.2
+seaborn==0.13.2
+
+# Работа с форматами
+pyarrow==15.0.0
+fastparquet==2024.2.0
+
+# Для ETL и API
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Для работы с Kaggle
+kaggle==1.6.12
+
+# Jupyter для EDA
+jupyter==1.0.0
+jupyterlab==4.1.0
+
+# Машинное обучение (для будущего использования)
+scikit-learn==1.4.0
