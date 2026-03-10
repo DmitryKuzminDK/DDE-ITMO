@@ -1,1 +1,49 @@
+# tech-defect-prediction/.gitignore
 
+# Виртуальное окружение
+venv/
+env/
+ENV/
+.venv/
+pythonenv*
+
+# Файлы конфигурации с секретами
+.env
+*.env
+kaggle.json
+
+# Директории с данными (чтобы не хранить большие файлы в git)
+data/
+*.csv
+*.parquet
+*.pkl
+*.h5
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# Python кэш
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Логи
+*.log
+logs/
+
+# Визуализации
+images/*.png
+images/*.jpg
+images/*.svg
+
+# Системные файлы
+.DS_Store
+Thumbs.db
