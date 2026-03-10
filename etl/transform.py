@@ -1,15 +1,8 @@
-"""
-Упрощенный модуль очистки данных
-"""
-
 import pandas as pd
 import numpy as np
 from pathlib import Path
 
 def clean_data(df):
-    """
-    Базовая очистка данных
-    """
     print("=" * 50)
     print("ОЧИСТКА ДАННЫХ")
     print("=" * 50)
@@ -56,6 +49,6 @@ def clean_data(df):
     # Сохраняем результат
     Path("data/processed").mkdir(parents=True, exist_ok=True)
     df.to_csv("data/processed/clean_defect_data.csv", index=False)
-    print(f"✅ Данные сохранены в data/processed/clean_defect_data.csv")
+    print(f" Данные сохранены в data/processed/clean_defect_data.csv")
 
     return df
