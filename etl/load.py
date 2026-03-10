@@ -1,21 +1,15 @@
-"""
-Упрощенный модуль сохранения данных
-"""
-
 import pandas as pd
 from pathlib import Path
 
 def save_final_data(df):
-    """
-    Сохраняет финальные данные
-    """
+
     print("=" * 50)
     print("СОХРАНЕНИЕ ДАННЫХ")
     print("=" * 50)
 
     # Проверяем наличие целевой переменной
     if 'defect_label' not in df.columns:
-        print("❌ В данных нет колонки defect_label")
+        print("В данных нет колонки defect_label")
         return False
 
     # Базовая статистика
@@ -31,5 +25,5 @@ def save_final_data(df):
     Path("data/final").mkdir(parents=True, exist_ok=True)
     df.to_csv("data/final/final_defect_data.csv", index=False)
 
-    print(f"✅ Данные сохранены в data/final/final_defect_data.csv")
+    print(f"Данные сохранены в data/final/final_defect_data.csv")
     return True
