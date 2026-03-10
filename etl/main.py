@@ -1,5 +1,3 @@
-# tech-defect-prediction/etl/main.py
-
 """
 Главный модуль ETL-конвейера для анализа дефектов ПО.
 Предоставляет CLI интерфейс для управления процессом.
@@ -14,18 +12,14 @@ from datetime import datetime
 import pandas as pd
 from dotenv import load_dotenv
 
-# Добавляем родительскую директорию в путь для импорта
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# Импортируем модули ETL
 from etl.extract import DataExtractor, extract_from_env, extract_from_local, extract_from_kaggle
 from etl.transform import DataTransformer, transform_data, quick_clean
 from etl.load import DataLoader, load_data, load_from_processed
 
-# Загружаем переменные окружения
 load_dotenv()
 
-# Настройка логирования
 logging.basicConfig(
     level=getattr(logging, os.getenv('LOG_LEVEL', 'INFO')),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -36,7 +30,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Создаем директорию для логов
 Path("logs").mkdir(exist_ok=True)
 
 
@@ -57,7 +50,6 @@ class ETLPipeline:
         self.transformer = DataTransformer()
         self.loader = DataLoader()
         
-        # Статистика выполнения
         self.pipeline_stats = {
             'start_time': None,
             'end_time': None,
@@ -74,7 +66,7 @@ class ETLPipeline:
         
         Args:
             source (str): Источник данных ('kaggle', 'local', 'env')
-            **kwargs: Дополнительные параметры для конкретного источника
+            **kwargs: Дополнительные параметры
         
         Returns:
             pd.DataFrame: Извлеченные данные или None
@@ -101,7 +93,6 @@ class ETLPipeline:
                 logger.error(f"Неизвестный источник данных: {source}")
                 return None
             
-            # Сохраняем статистику
             stage_time = (datetime.now() - stage_start).total_seconds()
             self.pipeline_stats['stages']['extract'] = {
                 'status': 'success' if data is not None else 'failed',
@@ -143,7 +134,6 @@ class ETLPipeline:
         logger.info("=" * 70)
         
         try:
-            # Если данные не переданы, пробуем загрузить из raw
             if data is None:
                 raw_path = Path("data/raw/raw_defect_data.csv")
                 if raw_path.exists():
@@ -153,10 +143,8 @@ class ETLPipeline:
                     logger.error("Нет данных для трансформации")
                     return None
             
-            # Выполняем трансформацию
             transformed = self.transformer.transform(data, save_intermediate)
             
-            # Сохраняем статистику
             stage_time = (datetime.now() - stage_start).total_seconds()
             self.pipeline_stats['stages']['transform'] = {
                 'status': 'success' if transformed is not None else 'failed',
@@ -197,7 +185,6 @@ class ETLPipeline:
         logger.info("=" * 70)
         
         try:
-            # Если данные не переданы, пробуем загрузить из processed
             if data is None:
                 logger.info("Загрузка данных из processed директории...")
                 data = self.loader.load_from_processed()
@@ -205,10 +192,8 @@ class ETLPipeline:
                     logger.error("Нет данных для загрузки")
                     return False, None
             
-            # Выполняем загрузку
             success, path = self.loader.save_final_data(data, format, archive_previous)
             
-            # Сохраняем статистику
             stage_time = (datetime.now() - stage_start).total_seconds()
             self.pipeline_stats['stages']['load'] = {
                 'status': 'success' if success else 'failed',
@@ -248,27 +233,23 @@ class ETLPipeline:
         logger.info("ЗАПУСК ПОЛНОГО ETL-КОНВЕЙЕРА")
         logger.info("=" * 70)
         
-        # Шаг 1: Extract
         data = self.run_extract(source, **kwargs)
         if data is None:
             logger.error("Прерывание конвейера: ошибка на этапе Extract")
             self._print_summary()
             return False
         
-        # Шаг 2: Transform
         transformed = self.run_transform(data)
         if transformed is None:
             logger.error("Прерывание конвейера: ошибка на этапе Transform")
             self._print_summary()
             return False
         
-        # Шаг 3: Load
         format = kwargs.get('format', 'csv')
         success, path = self.run_load(transformed, format)
         
         self.pipeline_stats['end_time'] = datetime.now().isoformat()
         
-        # Финальный отчет
         self._print_summary()
         
         return success
@@ -326,7 +307,6 @@ def create_parser():
         """
     )
     
-    # Группа источников данных
     source_group = parser.add_mutually_exclusive_group()
     source_group.add_argument(
         '--local',
@@ -339,7 +319,6 @@ def create_parser():
         help='Загрузить датасет с Kaggle (формат: username/dataset-name)'
     )
     
-    # Группа режимов выполнения
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
         '--extract-only',
@@ -357,7 +336,6 @@ def create_parser():
         help='Выполнить только загрузку (требует наличия processed данных)'
     )
     
-    # Дополнительные опции
     parser.add_argument(
         '--format',
         choices=['csv', 'parquet'],
@@ -391,11 +369,9 @@ def create_parser():
 def main():
     """Главная функция запуска ETL-конвейера."""
     
-    # Создаем парсер и разбираем аргументы
     parser = create_parser()
     args = parser.parse_args()
     
-    # Показываем баннер
     print("""
     ╔════════════════════════════════════════════════════════════╗
     ║     ETL Pipeline for Software Defect Prediction v1.0      ║
@@ -403,12 +379,9 @@ def main():
     ╚════════════════════════════════════════════════════════════╝
     """)
     
-    # Создаем конвейер
     pipeline = ETLPipeline(verbose=args.verbose)
     
-    # Определяем режим работы
     if args.extract_only:
-        # Только извлечение
         if args.local:
             pipeline.run_extract('local', local_file=args.local)
         elif args.kaggle_dataset:
@@ -417,15 +390,12 @@ def main():
             pipeline.run_extract('env')
             
     elif args.transform_only:
-        # Только трансформация
         pipeline.run_transform()
         
     elif args.load_only:
-        # Только загрузка
         pipeline.run_load(format=args.format, archive_previous=not args.no_archive)
         
     else:
-        # Полный конвейер
         source = None
         kwargs = {'format': args.format, 'archive_previous': not args.no_archive}
         
@@ -441,14 +411,12 @@ def main():
         if success:
             logger.info("\n✨ ETL-конвейер успешно завершен!")
             
-            # Показываем пути к результатам
             logger.info("\nРезультаты:")
             logger.info(f"  📁 Сырые данные: data/raw/raw_defect_data.csv")
             logger.info(f"  📁 Очищенные данные: data/processed/")
             logger.info(f"  📁 Финальные данные: data/final/")
             logger.info(f"  📊 Отчеты: data/final/metadata_*.json")
             
-            # Подсказка для следующего шага
             logger.info("\n🚀 Для анализа данных запустите:")
             logger.info("   jupyter lab notebooks/EDA.ipynb")
             
