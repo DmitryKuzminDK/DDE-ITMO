@@ -64,15 +64,15 @@ tech-defect-prediction/
 ### 1. Клонирование проекта
 
 ```bash
-git clone <git@github.com:vaduatop/data_eng.git>
+git clone <git@github.com:DmitryKuzminDK/DDE-ITMO.git>
 cd data-engineeing-project
 ```
 
 ### 2. Создание и активация виртуального окружения
 
 ```bash
-conda create -n coffee_env python=3.13 pip
-conda activate coffee_env
+conda create -n defect_env python=3.10 pip
+conda activate defect_env
 ```
 
 ### 3. Установка зависимостей
@@ -87,18 +87,12 @@ pip install -r requirements.txt
 
 ```bash
 # .env
-# Конфигурация базы данных
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=coffee_db
-DB_USER=your_username
-DB_PASSWORD=your_password
 
-# URL датасета на Google Drive
-DATASET_URL=https://drive.google.com/file/d/1O3GpKitaVD4jjsqNiwahw8qU2ARUxDMJ/view
+# Способ загрузки данных: 'gdrive' или 'local'
+DATA_SOURCE_METHOD=gdrive
 
-# Локальный путь к данным (опционально)
-LOCAL_DATA_PATH=data/Coffee-modified.csv
+# ID файла на Google Drive (из ссылки вида .../file/d/ФАЙЛ_ID/view)
+GDRIVE_FILE_ID=1kGJHKBwLodGYlnMO_b-_cMvGPDuYC_Fo
 ```
 
 > **Важно:** Файл `.env` содержит конфиденциальные данные и автоматически добавлен в `.gitignore`
@@ -109,15 +103,9 @@ LOCAL_DATA_PATH=data/Coffee-modified.csv
 
 Проект реализует полноценный **ETL-конвейер**, состоящий из трёх модулей:
 
-- **`extract.py`** — загрузка исходных данных из локального CSV-файла или Google Drive
-- **`transform.py`** — очистка, нормализация и валидация данных, сохранение в `.csv` и `.parquet`
+- **`extract.py`** — загрузка исходных данных CSV-файла с Google Drive по ID файла
+- **`transform.py`** — очистка, нормализация и валидация данных, сохранение в `.csv`
 - **`load.py`** — сохранение финальных обработанных данных в CSV формате
-
-### Диаграмма ETL процесса
-
-```bash
-python etl/main.py [путь_к_файлу]
-```
 
 ### CLI интерфейс
 
@@ -129,68 +117,46 @@ python etl/main.py [путь_к_файлу]
 # Использовать настройки из .env (автоматически загружает с Google Drive)
 python etl/main.py
 
-# Локальный файл
-python etl/main.py --local data/Coffee-modified.csv
-
-# Загрузка с Google Drive напрямую
-python etl/main.py --gdrive "https://drive.google.com/file/d/1O3GpKitaVD4jjsqNiwahw8qU2ARUxDMJ/view"
+# Загрузка с Google Drive напрямую (указав ID)
+python etl/main.py --gdrive-id 1kGJHKBwLodGYlnMO_b-_cMvGPDuYC_Fo
 ```
 
 #### Пошаговое выполнение
 
 ```bash
 # Только извлечение данных
-python etl/main.py --extract-only
+python etl/main.py --only-extract
 
 # Только трансформация (требует предварительного extract)
-python etl/main.py --transform-only
+python etl/main.py --only-transform
 
 # Только загрузка в финальное хранилище
-python etl/main.py --load-only
+python etl/main.py --only-load
 ```
 
-#### Дополнительные опции
-
-```bash
-# Подробный вывод с трейсбеком ошибок
-python etl/main.py --verbose
-
-# Указать путь для сохранения загруженного файла
-python etl/main.py --gdrive "URL" --output data/my_data.csv
-
-# Справка по всем командам
-python etl/main.py --help
-
-# Версия программы
-python etl/main.py --version
-```
 
 ### Примеры использования
 
 #### Пример 1: Первый запуск с Google Drive
 
 ```bash
-# 1. Создайте .env файл с DATASET_URL
+# 1. Создайте .env файл с GDRIVE_FILE_ID
 # 2. Запустите полный конвейер
 python etl/main.py
 
-#### Пример 2: Работа с локальными данными
-
-```bash
-python etl/main.py --local data/my_coffee_data.csv
 ```
 
-#### Пример 3: Отладка конкретного этапа
+#### Пример 2: Отладка конкретного этапа
 
 ```bash
 # Сначала извлекаем данные
-python etl/main.py --extract-only --local data/Coffee-modified.csv
+python etl/main.py --only-extract --local data/my_data.csv
 
 # Затем отлаживаем трансформацию
-python etl/main.py --transform-only
+python etl/main.py --only-transform
 
 # Наконец загружаем в финальное хранилище
-python etl/main.py --load-only
+python etl/main.py --only-load
 ```
 
 ---
