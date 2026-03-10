@@ -1,5 +1,3 @@
-# tech-defect-prediction/.gitignore
-
 # Виртуальное окружение
 venv/
 env/
